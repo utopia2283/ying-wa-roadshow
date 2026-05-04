@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>英華中學 AI Road Show 互動畫畫系統 Demo</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="proposal-bar">
+        <div class="brand-lockup">
+          <img src="assets/syncbuddy-logo.jpg" alt="SyncBuddy Tech logo" />
+          <div>
+            <strong>SyncBuddy Tech</strong>
+            <span>AI Interactive System Proposal</span>
+          </div>
+        </div>
+        <span>Present By: Match Fan</span>
+      </header>
+
+      <section class="hero">
+        <div class="hero-copy">
+          <div class="hero-brand">
+            <img src="assets/syncbuddy-logo.jpg" alt="SyncBuddy Tech logo" />
+            <span>SyncBuddy Tech</span>
+          </div>
+          <p class="eyebrow">Proposal by SyncBuddy Tech · Present By: Match Fan</p>
+          <h1>AI 互動畫作生命化系統</h1>
+          <p class="hero-subtitle">─ 英華中學 ✕ 南昌站 ─</p>
+          <p class="hero-desc">
+            路人掃描 QR Code 後用手機畫畫，系統經 AI 去底、分析及審核，把作品變成角色、
+            動態文字、脈搏光效、軌道圖案或能量體，即時投放到大型 LED 屏幕。
+          </p>
+        </div>
+        <div class="qr-card" aria-label="QR Code 模擬區">
+          <div class="qr-grid">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <strong>Scan to Draw</strong>
+          <small>現場 QR Code 入口示意</small>
+        </div>
+      </section>
+
+      <section class="flow-strip" aria-label="系統流程">
+        <article class="flow-step is-active" data-flow="draw">
+          <span>01</span>
+          <strong>掃 QR 畫畫</strong>
+          <p>手機瀏覽器打開畫板，無需安裝 App。</p>
+        </article>
+        <article class="flow-step" data-flow="ai">
+          <span>02</span>
+          <strong>AI 導演活化</strong>
+          <p>判斷作品意圖，選擇活化形態。</p>
+        </article>
+        <article class="flow-step" data-flow="review">
+          <span>03</span>
+          <strong>內容審核</strong>
+          <p>過濾不雅內容，批准後才上屏。</p>
+        </article>
+        <article class="flow-step" data-flow="screen">
+          <span>04</span>
+          <strong>LED 上屏</strong>
+          <p>作品在大屏幕持續活動，定時淡出。</p>
+        </article>
+      </section>
+
+      <section class="demo-grid">
+        <div class="phone-panel">
+          <div class="phone-frame">
+            <div class="phone-top">
+              <span></span>
+              <p>yingwa-ai.hk/draw</p>
+            </div>
+            <div class="canvas-wrap">
+              <canvas id="drawCanvas" width="320" height="360" aria-label="手機畫板"></canvas>
+              <div class="canvas-hint" id="canvasHint">用滑鼠或手指在這裡畫畫</div>
+            </div>
+            <div class="toolbar" aria-label="畫板工具">
+              <button class="color-button is-selected" type="button" data-color="#111827" style="--swatch:#111827" aria-label="黑色"></button>
+              <button class="color-button" type="button" data-color="#e11d48" style="--swatch:#e11d48" aria-label="紅色"></button>
+              <button class="color-button" type="button" data-color="#2563eb" style="--swatch:#2563eb" aria-label="藍色"></button>
+              <button class="color-button" type="button" data-color="#059669" style="--swatch:#059669" aria-label="綠色"></button>
+              <button class="color-button" type="button" data-color="#7c3aed" style="--swatch:#7c3aed" aria-label="紫色"></button>
+              <button class="color-button" type="button" data-color="#ea580c" style="--swatch:#ea580c" aria-label="橙色"></button>
+              <button class="color-button" type="button" data-color="#0891b2" style="--swatch:#0891b2" aria-label="青色"></button>
+              <button class="color-button" type="button" data-color="#be185d" style="--swatch:#be185d" aria-label="粉紅"></button>
+              <button class="color-button" type="button" data-color="#ca8a04" style="--swatch:#ca8a04" aria-label="金色"></button>
+              <button class="color-button" type="button" data-color="#57534e" style="--swatch:#57534e" aria-label="灰色"></button>
+              <button class="color-button" type="button" data-color="#ffffff" style="--swatch:#ffffff" aria-label="白色"></button>
+              <button class="tool-button btn-colspan-2" type="button" id="clearBtn">清除</button>
+              <button class="submit-button btn-colspan-3" type="button" id="submitBtn">提交作品</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-panel">
+          <div class="panel-header">
+            <p class="eyebrow">Live Control</p>
+            <h2>AI 處理與後台審核</h2>
+          </div>
+
+          <div class="ai-console" id="aiConsole">
+            <div class="console-row is-done">
+              <span></span>
+              <p>等待觀眾提交作品</p>
+            </div>
+            <div class="console-row">
+              <span></span>
+              <p>AI 去底抽取筆跡輪廓</p>
+            </div>
+            <div class="console-row">
+              <span></span>
+              <p>選擇角色、文字、光效或能量形態</p>
+            </div>
+            <div class="console-row">
+              <span></span>
+              <p>內容安全檢查</p>
+            </div>
+          </div>
+
+          <div class="review-box">
+            <div class="review-head">
+              <h3>待審核作品</h3>
+              <span id="queueCount">0</span>
+            </div>
+            <div class="moderation-toggle">
+              <button class="mode-btn is-active" id="modeManual" type="button">
+                <span class="mode-dot"></span>人工審批
+              </button>
+              <button class="mode-btn" id="modeAuto" type="button">
+                <span class="mode-dot"></span>AI 自動
+              </button>
+            </div>
+            <div class="mode-desc" id="modeDesc">高峰期模式 · 現場人員點選核准，100% 過濾風險</div>
+            <div class="review-list" id="reviewList">
+              <p class="empty-state">暫時未有新作品</p>
+            </div>
+          </div>
+
+          <div class="risk-grid">
+            <div>
+              <strong>防 Hang 機</strong>
+              <p>提交進入隊列，同時限制每分鐘提交量及大屏物件數量。</p>
+            </div>
+            <div>
+              <strong>自動消失</strong>
+              <p>每件作品約 3 至 8 分鐘淡出，Demo 以較快速度展示。</p>
+            </div>
+            <div>
+              <strong>內容安全</strong>
+              <p>敏感詞、色情圖像及人手審批，避免不當內容公開播放。</p>
+            </div>
+          </div>
+
+          <div class="aigc-card">
+            <div>
+              <p class="eyebrow">AIGC Highlight Studio</p>
+              <h3>精選作品生成 AI 影片</h3>
+              <p>後台揀選優秀作品，送入 AIGC Video API，生成 5-8 秒 highlight 片段，不影響即時上屏。</p>
+            </div>
+            <div class="aigc-progress" id="aigcProgress">
+              <span style="--step: 1"></span>
+              <span style="--step: 2"></span>
+              <span style="--step: 3"></span>
+              <span style="--step: 4"></span>
+              <span style="--step: 5"></span>
+            </div>
+
+            <div class="aigc-gen-panel" id="aigcGenPanel">
+              <div class="aigc-thumbs" id="aigcThumbnails"></div>
+              <div class="aigc-gen-progress" id="aigcGenProgress" style="display:none">
+                <div class="aigc-gen-label">
+                  <span id="aigcGenStatus">生成中</span>
+                  <span id="aigcGenPercent">0%</span>
+                </div>
+                <div class="aigc-gen-bar-track">
+                  <div class="aigc-gen-bar" id="aigcGenBar"></div>
+                </div>
+              </div>
+            </div>
+
+            <p class="aigc-status" id="aigcStatus">Ready · 選作品後可生成精選影片</p>
+            <button class="aigc-button" type="button" id="aigcBtn">生成精選影片 Demo</button>
+          </div>
+        </div>
+
+        <div class="led-panel">
+          <div class="led-header">
+            <div>
+              <p class="eyebrow">LED Screen Preview</p>
+              <h2>大型屏幕動態效果</h2>
+            </div>
+            <div class="screen-stats">
+              <span><b id="liveCount">0</b> Live</span>
+              <span><b id="totalCount">0</b> Approved</span>
+            </div>
+          </div>
+          <div class="led-screen" id="ledScreen" aria-label="LED 大屏幕動畫預覽">
+            <canvas id="particleCanvas"></canvas>
+            <div class="stage-beam beam-one"></div>
+            <div class="stage-beam beam-two"></div>
+            <div class="stage-ring ring-a"></div>
+            <div class="stage-ring ring-b"></div>
+            <div class="screen-title">
+              <strong>Ying Wa AI Wall</strong>
+              <span>Audience drawings come alive · SyncBuddy Tech</span>
+            </div>
+            <img class="screen-logo" src="assets/syncbuddy-logo.jpg" alt="SyncBuddy Tech logo" />
+            <div class="screen-presenter">Present By: Match Fan</div>
+            <div class="screen-message" id="screenMessage">批准作品後，AI 會按內容選擇不同動態形態</div>
+            <div class="aigc-film" id="aigcFilm" aria-label="AIGC 影片示範">
+              <div class="film-bg"></div>
+              <div class="film-subject">
+                <img src="assets/syncbuddy-logo.jpg" alt="SyncBuddy Tech logo" />
+              </div>
+              <div class="film-copy">
+                <span>AIGC Highlight</span>
+                <strong>Selected drawings become a cinematic 8s video</strong>
+              </div>
+            </div>
+          </div>
+          <div class="screen-controls">
+            <button type="button" id="sampleBtn">加入示範作品</button>
+            <button type="button" id="clearScreenBtn">清空大屏</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="details-section">
+        <div>
+          <p class="eyebrow">Execution Detail</p>
+          <h2>現場運作細節</h2>
+        </div>
+        <div class="details-grid">
+          <article>
+            <h3>1. 參加者端</h3>
+            <p>QR Code 開啟手機畫板，支援 iPhone 及 Android。提交前可重畫，提交後進入 AI 處理隊列。</p>
+          </article>
+          <article>
+            <h3>2. 即時動畫引擎</h3>
+            <p>系統先去底及裁走空白邊，再判斷作品類型。角色才會加表情及肢體；文字、符號及抽象圖案會用光效、軌道、粒子或節奏動畫處理。</p>
+          </article>
+          <article>
+            <h3>3. 審核機制</h3>
+            <p>建議現場人員使用後台批准作品。拒絕作品不會上屏，已上屏作品亦可即時刪除。</p>
+          </article>
+          <article>
+            <h3>4. AIGC 精選影片</h3>
+            <p>所有投稿不直接生成影片，避免延遲及成本失控。後台只揀精選作品生成 5-8 秒 AIGC highlight，再排程於大屏播放。</p>
+          </article>
+        </div>
+      </section>
+
+      <footer class="proposal-footer">
+        <div class="brand-lockup">
+          <img src="assets/syncbuddy-logo.jpg" alt="SyncBuddy Tech logo" />
+          <strong>SyncBuddy Tech</strong>
+        </div>
+        <span>AI Road Show Interactive System Demo · Present By: Match Fan</span>
+      </footer>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

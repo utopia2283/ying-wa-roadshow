@@ -39,56 +39,68 @@ let liveItems = new Map();
 let itemId = 1;
 let particles = [];
 let aigcRunning = false;
+let selectedCategory = null;
 
 const animationTypes = [
-  { label: "角色行走", effect: "walk", form: "creature", note: "角色在屏幕左右行走，帶踢腿擺動。" },
-  { label: "角色跳躍", effect: "jump", form: "creature", note: "角色原地跳躍，有起跳及落地感。" },
-  { label: "角色舞蹈", effect: "dance", form: "creature", note: "角色左右搖擺，帶有節奏感。" },
-  { label: "角色揮手", effect: "wave", form: "creature", note: "角色上下揮手打招呼。" },
-  { label: "角色暈頭", effect: "dizzy", form: "creature", note: "角色暈眩打轉，眼睛冒出星星。" },
-  { label: "角色發呆", effect: "idle", form: "creature", note: "角色輕微呼吸起伏，偶爾眨眼。" },
-  { label: "大眼睛", effect: "big-eye", form: "zoom-breathe", note: "圖案放大眼睛效果，瞳孔黑白分明。" },
-  { label: "大嘴巴", effect: "big-mouth", form: "bounce", note: "嘴巴張合動畫，仿卡通誇張效果。" },
-  { label: "脈搏光環", effect: "glow", form: "aura", note: "心形或符號發出脈衝光環。" },
-  { label: "呼吸效果", effect: "breathe", form: "zoom-breathe", note: "均勻放大縮小，如呼吸節奏。" },
-  { label: "軌道旋轉", effect: "spin", form: "orbit", note: "加入雙軌道線，圖案在內旋轉。" },
-  { label: "能量漂浮", effect: "float", form: "energy", note: "抽象線條化為能量體，粒子漂移。" },
-  { label: "彈跳文字", effect: "bounce", form: "caption", note: "文字彈跳演出，有起落節奏。" },
-  { label: "掃光特效", effect: "sweep", form: "caption", note: "光帶掠過文字，帶有節奏掃描。" },
-  { label: "閃爍特效", effect: "twinkle", form: "energy", note: "光亮閃爍，如星光眨眼。" },
-  { label: "漂浮白雲", effect: "cloud", form: "float", note: "白雲飄入畫面，悠悠漂浮。" },
-  { label: "閃電效果", effect: "lightning", form: "energy", note: "鋸齒閃電在作品外圍跳動。" },
-  { label: "彩虹光譜", effect: "rainbow", form: "aura", note: "七彩光環包裹圖案，徐徐轉動。" },
-  { label: "星塵效果", effect: "stardust", form: "energy", note: "周圍散發星塵粒子。" },
-  { label: "泡泡飄逸", effect: "bubble", form: "float", note: "彩色泡泡從作品飄出。" },
-  { label: "火焰效果", effect: "fire", form: "energy", note: "火焰在作品底部燃燒。" },
-  { label: "雪花飄落", effect: "snow", form: "float", note: "雪花緩緩飄落，包圍作品。" },
-  { label: "雨滴效果", effect: "rain", form: "energy", note: "雨絲從上落下打在作品上。" },
-  { label: "流星滑落", effect: "shooting-star", form: "energy", note: "流星拖着光尾划過屏幕。" },
-  { label: "心跳脈動", effect: "heartbeat", form: "aura", note: "光環随心跳节奏缩放发光。" },
-  { label: "彈簧跳躍", effect: "spring", form: "bounce", note: "彈簧式壓縮爆發跳躍。" },
-  { label: "波浪起伏", effect: "wave", form: "caption", note: "文字如波浪高低起伏。" },
-  { label: "旋渦效果", effect: "vortex", form: "orbit", note: "作品被吸入旋渦效果中。" },
-  { label: "霓虹閃爍", effect: "neon-flicker", form: "caption", note: "文字變成霓虹燈，閃爍發光。" },
-  { label: "故障效果", effect: "glitch", form: "caption", note: "數碼故障風格，錯位色彩。" },
-  { label: "3D翻轉", effect: "flip-3d", form: "zoom-breathe", note: "作品 3D 翻轉展示。" },
-  { label: "縮放呼吸", effect: "zoom-breathe", form: "zoom-breathe", note: "整體均勻放大縮小。" },
-  { label: "傾斜搖晃", effect: "tilt-sway", form: "float", note: "作品左右傾斜搖擺。" },
-  { label: "陰影晃動", effect: "shadow-dance", form: "creature", note: "影子在地面晃動陪襯。" },
-  { label: "齒輪轉動", effect: "gear-spin", form: "orbit", note: "齒輪帶動作品一起轉動。" },
-  { label: "齒輪反轉", effect: "gear-reverse", form: "orbit", note: "齒輪反向轉動，效果錯位。" },
-  { label: "齒輪配合", effect: "gear-mesh", form: "orbit", note: "多個齒輪互相咬合轉動。" },
-  { label: "宇宙星雲", effect: "nebula", form: "aura", note: "星雲色彩在作品周圍緩慢流動。" },
-  { label: "黑洞引力", effect: "blackhole", form: "vortex", note: "作品被吸入黑洞效果。" },
-  { label: "縮時效果", effect: "timelapse", form: "bounce", note: "作品快速變化，如縮時攝影。" },
-  { label: "離心力", effect: "centrifugal", form: "orbit", note: "作品被離心力甩向外圍。" },
+  // 人物
+  { label: "角色行走", effect: "walk", form: "creature", cat: "creature", note: "角色在屏幕左右行走，帶踢腿擺動。" },
+  { label: "角色跳躍", effect: "jump", form: "creature", cat: "creature", note: "角色原地跳躍，有起跳及落地感。" },
+  { label: "角色舞蹈", effect: "dance", form: "creature", cat: "creature", note: "角色左右搖擺，帶有節奏感。" },
+  { label: "角色揮手", effect: "wave", form: "creature", cat: "creature", note: "角色上下揮手打招呼。" },
+  { label: "角色暈頭", effect: "dizzy", form: "creature", cat: "creature", note: "角色暈眩打轉，眼睛冒出星星。" },
+  { label: "角色發呆", effect: "idle", form: "creature", cat: "creature", note: "角色輕微呼吸起伏，偶爾眨眼。" },
+  { label: "大眼睛", effect: "big-eye", form: "zoom-breathe", cat: "creature", note: "圖案放大眼睛效果，瞳孔黑白分明。" },
+  { label: "大嘴巴", effect: "big-mouth", form: "bounce", cat: "creature", note: "嘴巴張合動畫，仿卡通誇張效果。" },
+  { label: "傾斜搖晃", effect: "tilt-sway", form: "float", cat: "creature", note: "作品左右傾斜搖擺。" },
+  { label: "陰影晃動", effect: "shadow-dance", form: "creature", cat: "creature", note: "影子在地面晃動陪襯。" },
+  { label: "縮時效果", effect: "timelapse", form: "bounce", cat: "creature", note: "作品快速變化，如縮時攝影。" },
+  { label: "3D翻轉", effect: "flip-3d", form: "zoom-breathe", cat: "creature", note: "作品 3D 翻轉展示。" },
+  // 動物
+  { label: "動物跑動", effect: "walk", form: "creature", cat: "animal", note: "動物在屏幕左右跑動。" },
+  { label: "動物跳躍", effect: "jump", form: "creature", cat: "animal", note: "動物原地跳躍，有活力。" },
+  { label: "動物搖擺", effect: "dance", form: "creature", cat: "animal", note: "動物左右搖擺，可愛生動。" },
+  { label: "動物暈頭", effect: "dizzy", form: "creature", cat: "animal", note: "動物暈眩打轉，趣怪可愛。" },
+  { label: "動物發呆", effect: "idle", form: "creature", cat: "animal", note: "動物輕微呼吸起伏，靜態萌。" },
+  { label: "大眼睛", effect: "big-eye", form: "zoom-breathe", cat: "animal", note: "放大眼睛效果，萌翻全場。" },
+  { label: "動物彈跳", effect: "spring", form: "bounce", cat: "animal", note: "彈簧式跳躍，活力十足。" },
+  { label: "動物漂浮", effect: "float", form: "energy", cat: "animal", note: "能量化漂浮，夢幻感。" },
+  { label: "動物旋轉", effect: "spin", form: "orbit", cat: "animal", note: "原地自轉，趣怪效果。" },
+  { label: "動物呼吸", effect: "breathe", form: "zoom-breathe", cat: "animal", note: "均勻放大縮小，萌爆呼吸。" },
+  { label: "動物閃爍", effect: "twinkle", form: "energy", cat: "animal", note: "光亮閃爍，精靈感。" },
+  { label: "動物顏色", effect: "rainbow", form: "aura", cat: "animal", note: "七彩變化，絢麗奪目。" },
+  { label: "動物火星", effect: "stardust", form: "energy", cat: "animal", note: "星塵散發，夢幻特效。" },
+  { label: "動物泡泡", effect: "bubble", form: "float", cat: "animal", note: "泡泡漂浮，童話感。" },
+  // 文字/符號
+  { label: "脈搏光環", effect: "glow", form: "aura", cat: "symbol", note: "心形或符號發出脈衝光環。" },
+  { label: "能量漂浮", effect: "float", form: "energy", cat: "symbol", note: "抽象線條化為能量體，粒子漂移。" },
+  { label: "彈跳文字", effect: "bounce", form: "caption", cat: "symbol", note: "文字彈跳演出，有起落節奏。" },
+  { label: "掃光特效", effect: "sweep", form: "caption", cat: "symbol", note: "光帶掠過文字，帶有節奏掃描。" },
+  { label: "閃爍特效", effect: "twinkle", form: "energy", cat: "symbol", note: "光亮閃爍，如星光眨眼。" },
+  { label: "漂浮白雲", effect: "cloud", form: "float", cat: "symbol", note: "白雲飄入畫面，悠悠漂浮。" },
+  { label: "閃電效果", effect: "lightning", form: "energy", cat: "symbol", note: "鋸齒閃電在作品外圍跳動。" },
+  { label: "彩虹光譜", effect: "rainbow", form: "aura", cat: "symbol", note: "七彩光環包裹圖案，徐徐轉動。" },
+  { label: "心跳脈動", effect: "heartbeat", form: "aura", cat: "symbol", note: "光環随心跳节奏缩放发光。" },
+  { label: "波浪起伏", effect: "wave-anim", form: "caption", cat: "symbol", note: "文字如波浪高低起伏。" },
+  { label: "旋渦效果", effect: "vortex", form: "orbit", cat: "symbol", note: "作品被吸入旋渦效果中。" },
+  { label: "霓虹閃爍", effect: "neon-flicker", form: "caption", cat: "symbol", note: "文字變成霓虹燈，閃爍發光。" },
+  { label: "故障效果", effect: "glitch", form: "caption", cat: "symbol", note: "數碼故障風格，錯位色彩。" },
+  { label: "軌道旋轉", effect: "spin", form: "orbit", cat: "symbol", note: "加入雙軌道線，圖案在內旋轉。" },
+  { label: "縮放呼吸", effect: "zoom-breathe", form: "zoom-breathe", cat: "symbol", note: "整體均勻放大縮小。" },
+  { label: "齒輪轉動", effect: "gear-spin", form: "orbit", cat: "symbol", note: "齒輪帶動作品一起轉動。" },
+  { label: "齒輪反轉", effect: "gear-reverse", form: "orbit", cat: "symbol", note: "齒輪反向轉動，效果錯位。" },
+  { label: "宇宙星雲", effect: "nebula", form: "aura", cat: "symbol", note: "星雲色彩在作品周圍緩慢流動。" },
+  { label: "黑洞引力", effect: "blackhole", form: "vortex", cat: "symbol", note: "作品被吸入黑洞效果。" },
+  { label: "離心力", effect: "centrifugal", form: "orbit", cat: "symbol", note: "作品被離心力甩向外圍。" },
+  { label: "泡泡飄逸", effect: "bubble", form: "float", cat: "symbol", note: "彩色泡泡從作品飄出。" },
+  { label: "火焰效果", effect: "fire", form: "energy", cat: "symbol", note: "火焰在作品底部燃燒。" },
+  { label: "流星滑落", effect: "shooting-star", form: "energy", cat: "symbol", note: "流星拖着光尾划過屏幕。" },
 ];
 
 const sampleDrawings = [
-  { image: makeSampleSvg("YW", "#155eef", "text"), animation: animationTypes[4] },
-  { image: makeSampleSvg("❤", "#e11d48", "heart"), animation: animationTypes[1] },
-  { image: makeSampleSvg("★", "#f59e0b", "star"), animation: animationTypes[2] },
-  { image: makeSampleSvg("Hi", "#16a34a", "text"), animation: animationTypes[3] },
+  { image: makeSampleSvg("YW", "#155eef", "text"), animation: animationTypes.find((a) => a.effect === "bounce" && a.cat === "symbol") },
+  { image: makeSampleSvg("❤", "#e11d48", "heart"), animation: animationTypes.find((a) => a.effect === "glow" && a.cat === "symbol") },
+  { image: makeSampleSvg("★", "#f59e0b", "star"), animation: animationTypes.find((a) => a.effect === "spin" && a.cat === "symbol") },
+  { image: makeSampleSvg("Hi", "#16a34a", "text"), animation: animationTypes.find((a) => a.effect === "neon-flicker" && a.cat === "symbol") },
 ];
 
 function setupCanvas() {
@@ -156,7 +168,10 @@ function resetConsole() {
 }
 
 function randomAnimation() {
-  return animationTypes[Math.floor(Math.random() * animationTypes.length)];
+  const pool = selectedCategory
+    ? animationTypes.filter((a) => a.cat === selectedCategory)
+    : animationTypes;
+  return pool[Math.floor(Math.random() * pool.length)];
 }
 
 function submitDrawing() {
@@ -285,7 +300,11 @@ function addToScreen(item) {
   const maxY = Math.max(90, ledScreen.clientHeight - size - 50);
   const x = randomInt(30, maxX);
   const y = randomInt(70, maxY);
-  const speed = randomInt(2800, 5200);
+
+  // 隨機動畫速度 + 延遲，令每件作品有「個性」
+  const duration = (2 + Math.random() * 2.5).toFixed(2);
+  const delay = (Math.random() * 3).toFixed(2);
+  const speed = (2800 + Math.random() * 3200).toFixed(0);
 
   art.className = `live-art ${item.animation.effect} form-${item.animation.form}`;
   art.dataset.id = String(item.id);
@@ -293,13 +312,18 @@ function addToScreen(item) {
   art.style.setProperty("--x", `${x}px`);
   art.style.setProperty("--y", `${y}px`);
   art.style.setProperty("--speed", `${speed}ms`);
+  art.style.animationDuration = `${duration}s`;
+  art.style.animationDelay = `${delay}s`;
   art.innerHTML = renderLiveArt(item);
   ledScreen.appendChild(art);
 
   totalApproved += 1;
   liveItems.set(item.id, art);
   updateStats();
-  burstParticles(x + size / 2, y + size / 2);
+  // 華麗粒子效果
+  burstParticles(x + size / 2, y + size / 2, 36);
+  burstParticles(x + size / 2, y + size / 2, 24);
+  createComet(x + size / 2, y + size / 2);
   createComet(x + size / 2, y + size / 2);
 
   const ttl = randomInt(10000, 16000);
@@ -572,15 +596,18 @@ function setupParticles() {
   particleCanvas.height = Math.max(1, Math.floor(rect.height));
 }
 
-function burstParticles(x, y) {
-  for (let i = 0; i < 24; i += 1) {
+function burstParticles(x, y, count = 24) {
+  const colors = ["#06b6d4", "#f59e0b", "#ff6b6b", "#ffd700", "#00ffcc", "#ff69b4", "#87ceeb", "#dda0dd"];
+  for (let i = 0; i < count; i += 1) {
+    const angle = (i / count) * Math.PI * 2 + Math.random() * 0.5;
+    const speed = 2 + Math.random() * 6;
     particles.push({
       x,
       y,
-      vx: (Math.random() - 0.5) * 5,
-      vy: (Math.random() - 0.5) * 5,
-      life: randomInt(28, 52),
-      color: Math.random() > 0.5 ? "#06b6d4" : "#f59e0b",
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed,
+      life: randomInt(28, 60),
+      color: colors[Math.floor(Math.random() * colors.length)],
     });
   }
 }
@@ -643,6 +670,14 @@ modeAuto.addEventListener("click", () => {
   modeDesc.textContent = "非高峰期模式 · AI 敏感詞及圖像過濾，24 小時無人值守自動更新";
   modeDesc.style.background = "#f0fdf4";
   modeDesc.style.color = "#166534";
+});
+
+document.querySelectorAll(".cat-btn").forEach((btn) => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".cat-btn").forEach((b) => b.classList.remove("is-selected"));
+    btn.classList.add("is-selected");
+    selectedCategory = btn.dataset.cat;
+  });
 });
 
 setupCanvas();

@@ -95,6 +95,23 @@
               <button class="tool-button btn-colspan-2" type="button" id="clearBtn">清除</button>
               <button class="submit-button btn-colspan-3" type="button" id="submitBtn">提交作品</button>
             </div>
+            <div class="category-selector">
+              <p class="cat-prompt">請選擇你畫作的靈魂類型</p>
+              <div class="cat-buttons">
+                <button class="cat-btn" type="button" data-cat="creature">
+                  <span class="cat-icon">🧑‍🎨</span>
+                  <span>人物</span>
+                </button>
+                <button class="cat-btn" type="button" data-cat="animal">
+                  <span class="cat-icon">🐱</span>
+                  <span>動物</span>
+                </button>
+                <button class="cat-btn" type="button" data-cat="symbol">
+                  <span class="cat-icon">✏️</span>
+                  <span>文字/符號</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -202,6 +219,60 @@
           </div>
           <div class="led-screen" id="ledScreen" aria-label="LED 大屏幕動畫預覽">
             <canvas id="particleCanvas"></canvas>
+
+            <!-- 背景牆動畫 -->
+            <div class="bg-wall">
+              <!-- 極光 -->
+              <div class="aurora"></div>
+              <!-- 城堡剪影 -->
+              <div class="castle castle-1"></div>
+              <div class="castle castle-2"></div>
+              <!-- 星空 -->
+              <div class="star-field">
+                <div class="star s1"></div>
+                <div class="star s2"></div>
+                <div class="star s3"></div>
+                <div class="star s4"></div>
+                <div class="star s5"></div>
+                <div class="star s6"></div>
+                <div class="star s7"></div>
+                <div class="star s8"></div>
+                <div class="star s9"></div>
+                <div class="star s10"></div>
+                <div class="star s11"></div>
+                <div class="star s12"></div>
+              </div>
+              <!-- 月亮 -->
+              <div class="moon"></div>
+              <!-- 漂浮燈籠 -->
+              <div class="lantern l1"></div>
+              <div class="lantern l2"></div>
+              <div class="lantern l3"></div>
+              <!-- 漂浮泡泡 -->
+              <div class="bubble b1"></div>
+              <div class="bubble b2"></div>
+              <div class="bubble b3"></div>
+              <div class="bubble b4"></div>
+              <div class="bubble b5"></div>
+              <div class="bubble b6"></div>
+              <!-- 仙子粉塵 -->
+              <div class="fairy-field">
+                <div class="fairy f1"></div>
+                <div class="fairy f2"></div>
+                <div class="fairy f3"></div>
+                <div class="fairy f4"></div>
+                <div class="fairy f5"></div>
+                <div class="fairy f6"></div>
+                <div class="fairy f7"></div>
+                <div class="fairy f8"></div>
+              </div>
+              <!-- 流星 -->
+              <div class="shooting-star-bg star-bg-1"></div>
+              <div class="shooting-star-bg star-bg-2"></div>
+              <!-- 彩虹拱門 -->
+              <div class="rainbow-arch"></div>
+            </div>
+
             <div class="stage-beam beam-one"></div>
             <div class="stage-beam beam-two"></div>
             <div class="stage-ring ring-a"></div>
